@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Result</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/result.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Best Route</h1>
+        <p>The best route from <strong>{{ best_route[0] }}</strong> to <strong>{{ best_route[-1] }}</strong> is:</p>
+        <ul>
+            {% for location in best_route %}
+                <li>{{ location }}</li>
+            {% endfor %}
+        </ul>
+        
+        <h2>Traffic Status Along the Route</h2>
+        <table>
+            <tr>
+                <th>Location</th>
+                <th>Traffic Status</th>
+                <th>Time</th>
+            </tr>
+            {% for status in traffic_status %}
+            <tr>
+                <td>{{ status.location }}</td>
+                <td>{{ status.congestion }}</td>
+                <td>{{ status.time }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+        <a href="/" class="back-btn">Go Back</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Route Finder</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Traffic Route Finder</h1>
+        <form action="/get_route" method="POST">
+            <label for="start">Start Location:</label>
+            <input type="text" id="start" name="start" placeholder="Enter starting location" required><br>
+            
+            <label for="end">End Location:</label>
+            <input type="text" id="end" name="end" placeholder="Enter destination" required><br>
+            
+            <label for="time">Current Time (HH:MM):</label>
+            <input type="time" id="time" name="time" required><br>
+            
+            <input type="submit" value="Find Best Route">
+        </form>
+        <div class="footer">
+            &copy; 2024 Traffic Management System
+        </div>
+    </div>
+</body>
+</html>
