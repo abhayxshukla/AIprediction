@@ -5,11 +5,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Reading the traffic data from CSV file 
 file_path = "data/updated_traffic_data.csv"
 traffic_data = pd.read_csv(file_path)
 
-# Function to classify traffic based on count
 def classify_traffic(count):
     if count < 2:
         return 'Loose'
@@ -18,25 +16,21 @@ def classify_traffic(count):
     else:
         return 'Congested'
 
-# Creating an undirected graph to allow bidirectional travel between intersections
 G = nx.Graph()
 
-# Adding edges to the graph based on congestion levels and time
 for index, row in traffic_data.iterrows():
     location = row['Location']
     congestion_level = row['Congestion_Level']
-    time = row['Time']  # Time from the CSV file
+    time = row['Time']
     
-    # Assuming each row provides information about transitions to the next intersection
+
     if index < len(traffic_data) - 1:
         next_location = traffic_data.iloc[index + 1]['Location']
-        # Add both directions to the graph for bidirectional travel
         G.add_edge(location, next_location, weight=congestion_level)
-        G.add_edge(next_location, location, weight=congestion_level)  # Add reverse edge
+        G.add_edge(next_location, location, weight=congestion_level)  
 
-# Simplified route suggestion based on congestion
+
 def find_best_route(start_location, end_location):
-    # Check if the locations exist in the graph
     if start_location not in G:
         print(f"Error: Start location {start_location} does not exist in the graph.")
         return None, "The start location does not exist in the traffic data."
@@ -51,29 +45,28 @@ def find_best_route(start_location, end_location):
         print(f"No path available between {start_location} and {end_location}.")
         return None, "No path available between these locations."
 
-# Home route to render the form
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Route to process form data and display results
 @app.route('/get_route', methods=['POST'])
 def get_route():
     start_location = request.form['start']
     end_location = request.form['end']
     current_time = request.form['time']
     
-    # Converting user input to datetime object for comparison
+
     current_time = datetime.strptime(current_time, '%H:%M')
     
-    # Finding the best route based on congestion levels
+ 
     best_route, error = find_best_route(start_location, end_location)
     
     if error:
-        # Displaying error message if there’s an issue with the locations or no path
+       
         return render_template('error.html', error_message=error)
     
-    # Get traffic statuses on the best route
+   
     traffic_status = []
     for location in best_route:
         congestion_level = traffic_data.loc[traffic_data['Location'] == location, 'Congestion_Level'].values[0]
